@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
 
 const OrganizationModel = mongoose.Schema({
+  _id: mongoose.ObjectId,
   organizationType: {
     type: String,
-    enum: ["LLP", "PVT LTD"],
+    enum: ["LLP", "PVT_LTD"],
     required: true,
   },
   name: {
     type: String,
     required: true,
   },
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   contactNumber: {
     type: Number,
     required: true,
+  },
+  isPaid: {
+    type: Boolean,
+    default: false,
   },
 });
 

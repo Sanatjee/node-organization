@@ -1,6 +1,18 @@
 const express = require("express");
+const cors = require("cors");
+// database connection
+require("./config/db");
+
+const organizationRoutes = require("./routes/organization.routes");
 
 const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// organization's routes
+
+app.use("/api/v1/", organizationRoutes);
 
 const PORT = 8080;
 app.listen(PORT, () => {
