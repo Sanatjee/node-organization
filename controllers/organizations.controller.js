@@ -1,28 +1,52 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 const organization = require("../models/organization.model");
 
 const catchAsyncError = require("../middlewares/catchAsyncError");
 
-exports.createOrganization = async (req, res) => {
+exports.createOrganization = catchAsyncError(async (req, res) => {
   try {
-    const { organizationType, name, contactNumber, isPaid } = req.body;
+    const { organizationType, name, email, contactNumber, isPaid } = req.body;
+
+    // Password generation starts here
+    const salt = await bcrypt.genSalt(10);
+
+    const password = await bcrypt
+      .hash(contactNumber.toString(), salt)
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // Password generation ends here
 
     const newOrganization = await organization.create({
       organizationType,
       name,
+      email,
+      password,
       contactNumber,
       isPaid,
     });
 
+    // Token generation starts here
+    const token = jwt.sign({ id: newOrganization.id }, process.env.tokenKey, {
+      expiresIn: "30d",
+    });
+    // Token generation ends here
+
     res.status(201).json({
       message: "Organization created successfully",
       organization: newOrganization,
+      //   token,
     });
   } catch (error) {
+    console.log(error);
     res
       .status(400)
       .json({ message: "Something Went Wrong.Try again later!", error });
   }
-};
+});
 
 exports.listOrganizations = async (req, res) => {
   try {

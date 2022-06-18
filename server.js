@@ -3,6 +3,8 @@ const cors = require("cors");
 // database connection
 require("./config/db");
 
+require("dotenv").config();
+
 const organizationRoutes = require("./routes/organization.routes");
 
 const app = express();
