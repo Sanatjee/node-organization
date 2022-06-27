@@ -16,6 +16,10 @@ app.use(express.json());
 
 app.use("/api/v1/", organizationRoutes);
 
+app.get("/", async (req, res) => {
+  res.send({ message: "server is running" });
+});
+
 const PORT = 8080;
 app.listen(PORT, () => {
   console.log(`connected on port ${PORT}`);
