@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
-const EmployeeModel = mongoose.Schema({
+const Schema = mongoose.Schema;
+
+const User = new Schema({
+  organizationId: {
+    type: String,
+    required: true,
+  },
   firstName: {
     type: String,
     required: true,
@@ -16,7 +22,6 @@ const EmployeeModel = mongoose.Schema({
   password: {
     type: String,
     length: 8,
-    required: true,
   },
   gender: {
     type: String,
@@ -27,11 +32,7 @@ const EmployeeModel = mongoose.Schema({
   },
   contactNumber: {
     type: String,
-  },
-  employeeId: {
-    type: String,
     required: true,
-    unique: true,
   },
   ctc: {
     type: Number,
@@ -56,4 +57,4 @@ const EmployeeModel = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.module("EmployeeModel", EmployeeModel);
+module.exports = mongoose.model("User", User);

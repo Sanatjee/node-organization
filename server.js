@@ -6,6 +6,7 @@ require("./config/db");
 require("dotenv").config();
 
 const organizationRoutes = require("./routes/organization.routes");
+const userRoutes = require("./routes/users.routes")
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 // organization's routes
 
 app.use("/api/v1/", organizationRoutes);
+app.use("/api/v1/", userRoutes);
 
 app.get("/", async (req, res) => {
   res.send({ message: "server is running" });
