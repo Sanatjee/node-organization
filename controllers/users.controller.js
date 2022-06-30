@@ -71,3 +71,11 @@ exports.getSingleUsers = async (res, req) => {
 exports.updateUser = async (res, req) => {};
 
 exports.deleteUser = async (res, req) => {};
+
+// Post login
+
+exports.login = async (res, req) => {};
+
+exports.requestNewPassword = async (res, req) => {};
+
+exports.updatePassword = async (res, req) => {};
