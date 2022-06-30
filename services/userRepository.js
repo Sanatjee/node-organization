@@ -4,8 +4,8 @@ const userModel = require("../models/users.model");
 class userRepository {
   constructor() {}
 
-  async list() {
-    const users = await this.userModel.find();
+  async list(orgId) {
+    const users = await userModel.find({ organizationId: orgId });
     return users;
   }
 

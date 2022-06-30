@@ -3,10 +3,15 @@ const organizationRepository = require("../services/organizationRepository");
 
 const catchAsyncError = require("../middlewares/catchAsyncError");
 
+// Initializing Repositories
+const orgRepo = new organizationRepository();
+const userRepo = new userRepository();
+
 exports.getUsers = async (req, res) => {
   try {
-    await res.status(200).json({
-      users: userRepository.list,
+    const { organizationId } = req.body;
+    return res.status(200).json({
+      users: await userRepo.list(organizationId),
     });
   } catch (err) {
     console.error(err);
@@ -17,10 +22,6 @@ exports.createUser = catchAsyncError(async (req, res) => {
   try {
     const { organizationId, firstName, lastName, contactNumber, email } =
       req.body;
-
-    // Initializing Repositories
-    const orgRepo = new organizationRepository();
-    const userRepo = new userRepository();
 
     // check for organization id and validate organization
     const checkOrg = await orgRepo.orgExists(organizationId);
@@ -42,7 +43,6 @@ exports.createUser = catchAsyncError(async (req, res) => {
     }
 
     // create a user
-
     const newUser = await userRepo.store({
       organizationId,
       firstName,
