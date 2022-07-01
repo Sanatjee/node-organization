@@ -1,11 +1,16 @@
 const userRepository = require("../services/userRepository");
 const organizationRepository = require("../services/organizationRepository");
 
+const LoginValidation = require("../validation_rules/users/login.validation")
+
 const catchAsyncError = require("../middlewares/catchAsyncError");
 
 // Initializing Repositories
 const orgRepo = new organizationRepository();
 const userRepo = new userRepository();
+
+// Initialization of Validation
+const validateUser = new LoginValidation();
 
 exports.getUsers = async (req, res) => {
   try {
@@ -68,14 +73,24 @@ exports.getSingleUsers = async (res, req) => {
   });
 };
 
-exports.updateUser = async (res, req) => {};
+exports.updateUser = async (res, req) => { };
 
-exports.deleteUser = async (res, req) => {};
+exports.deleteUser = async (res, req) => { };
 
 // Post login
 
-exports.login = async (res, req) => {};
+exports.login = async (res, req) => {
+  const { email, password } = req.body ? req.body : {};
 
-exports.requestNewPassword = async (res, req) => {};
+  // Validation starts
+  const checkValidity = await validateUser.checkRequest(email, password);
+  return checkValidity;
+  if (checkValidity.status === 400) {
+    return checkValidity;
+  }
 
-exports.updatePassword = async (res, req) => {};
+};
+
+exports.requestNewPassword = async (res, req) => { };
+
+exports.updatePassword = async (res, req) => { };

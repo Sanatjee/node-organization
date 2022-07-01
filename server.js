@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 // database connection
 require("./config/db");
 
@@ -11,7 +12,8 @@ const userRoutes = require("./routes/users.routes")
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // organization's routes
 
