@@ -1,31 +1,51 @@
+var validator = require("validator");
 class LoginValidation {
-    async checkRequest(email, password) {
-        const emailErrors = [];
-        const passwordErrors = [];
+  async checkRequest(request) {
+    let errorResponse = {
+      status: 200,
+      message: null,
+    };
+    const emailErrors = [];
+    const passwordErrors = [];
 
-        let errorResponse = {
-            status: 200
+    Object.keys(request).forEach(function (key) {
+      if (key === "email") {
+        if (request.email.length === 0) {
+          emailErrors.push("Email is required");
+        } else {
+          const checkEmail = validator.isEmail(request.email);
+          if (!checkEmail) {
+            emailErrors.push("Please enter a valid email address");
+          }
         }
-        if (!email) {
-            emailErrors.push("Email is required");
-        }
+      }
 
-        if (!password) {
-            passwordErrors.push("Password is required");
+      if (key === "password") {
+        if (request.password.length === 0) {
+          passwordErrors.push("Password is required");
+        } else {
+          if (request.password.length < 8) {
+            passwordErrors.push(
+              "Password should contain atleast of 8 characters"
+            );
+          }
         }
+      }
+    });
 
-        if (emailErrors.length != 0 || passwordErrors.length != 0) {
-            errorResponse = {
-                status: 400,
-                errors: {
-                    email: emailErrors.length > 0 ? emailErrors : null,
-                    password: passwordErrors.length > 0 ? passwordErrors : null,
-                }
-            }
-        }
-
-        return errorResponse;
+    if (emailErrors.length != 0 || passwordErrors.length != 0) {
+      errorResponse = {
+        status: 400,
+        message: null,
+        errors: {
+          email: emailErrors,
+          password: passwordErrors,
+        },
+      };
     }
+
+    return errorResponse;
+  }
 }
 
 module.exports = LoginValidation;

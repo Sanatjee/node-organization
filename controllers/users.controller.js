@@ -1,7 +1,7 @@
 const userRepository = require("../services/userRepository");
 const organizationRepository = require("../services/organizationRepository");
 
-const LoginValidation = require("../validation_rules/users/login.validation")
+const LoginValidation = require("../validation_rules/users/login.validation");
 
 const catchAsyncError = require("../middlewares/catchAsyncError");
 
@@ -73,24 +73,41 @@ exports.getSingleUsers = async (res, req) => {
   });
 };
 
-exports.updateUser = async (res, req) => { };
+exports.updateUser = async (res, req) => {};
 
-exports.deleteUser = async (res, req) => { };
+exports.deleteUser = async (res, req) => {};
 
 // Post login
 
-exports.login = async (res, req) => {
-  const { email, password } = req.body ? req.body : {};
-
-  // Validation starts
-  const checkValidity = await validateUser.checkRequest(email, password);
-  return checkValidity;
-  if (checkValidity.status === 400) {
-    return checkValidity;
+exports.login = async (req, res) => {
+  if (Object.keys(req.body).length === 0) {
+    await res.status(400).json({
+      status: 400,
+      message: "Invalid request.",
+      errors: null,
+    });
   }
 
+  // Validation starts
+  const checkValidity = await validateUser.checkRequest(req.body);
+
+  if (checkValidity.status === 400) {
+    await res.status(400).json(checkValidity);
+    return;
+  }
+
+  // send data to repo
+  const { email, password } = req.body;
+  const userInfo = await userRepo.createToken(email, password);
+
+  if (userInfo.status === 400) {
+    await res.status(400).json(userInfo);
+    return;
+  }
+
+  await res.status(200).json(userInfo);
 };
 
-exports.requestNewPassword = async (res, req) => { };
+exports.requestNewPassword = async (res, req) => {};
 
-exports.updatePassword = async (res, req) => { };
+exports.updatePassword = async (res, req) => {};

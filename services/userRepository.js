@@ -1,8 +1,9 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const userModel = require("../models/users.model");
 
 class userRepository {
-  constructor() { }
+  constructor() {}
 
   async list(orgId) {
     const users = await userModel.find({ organizationId: orgId });
@@ -18,9 +19,9 @@ class userRepository {
     return newUser;
   }
 
-  async update() { }
+  async update() {}
 
-  async destroy() { }
+  async destroy() {}
 
   async createPassword(contactNumber) {
     const salt = await bcrypt.genSalt(10);
@@ -34,9 +35,9 @@ class userRepository {
   }
 
   async createToken(email, password) {
-    const user = await userModel.findOne({ email });
+    let user = await userModel.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && (await bcrypt.compare(password.toString(), user.password))) {
       // Create token
       const token = jwt.sign(
         { user_id: user._id, email },
@@ -49,9 +50,19 @@ class userRepository {
       // save user token
       user.token = token;
       // user
-      res.status(200).json(user);
+      console.log(user);
+      return {
+        status: 200,
+        message: "Welcome! How are you doing today?",
+        userInfo: user,
+        token: token,
+      };
     }
-    res.status(400).send("Invalid Credentials");
+    return {
+      status: 400,
+      message: "Invalid Credentials",
+      errors: null,
+    };
   }
 
   async canAddUsers(orgId) {
@@ -62,10 +73,6 @@ class userRepository {
     }
     return true;
   }
-
-
 }
-
-
 
 module.exports = userRepository;
