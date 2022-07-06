@@ -21,4 +21,5 @@ router.delete(
   organizationsController.deleteOrganizations
 );
 
+router.post("/organization/login", organizationsController.login);
 module.exports = router;

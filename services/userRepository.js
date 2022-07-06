@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const userModel = require("../models/users.model");
 
 class userRepository {
-  constructor() {}
+  constructor() { }
 
   async list(orgId) {
     const users = await userModel.find({ organizationId: orgId });
@@ -19,9 +19,9 @@ class userRepository {
     return newUser;
   }
 
-  async update() {}
+  async update() { }
 
-  async destroy() {}
+  async destroy() { }
 
   async createPassword(contactNumber) {
     const salt = await bcrypt.genSalt(10);
@@ -47,10 +47,6 @@ class userRepository {
         }
       );
 
-      // save user token
-      user.token = token;
-      // user
-      console.log(user);
       return {
         status: 200,
         message: "Welcome! How are you doing today?",

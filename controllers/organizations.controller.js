@@ -5,6 +5,18 @@ const organization = require("../models/organization.model");
 
 const catchAsyncError = require("../middlewares/catchAsyncError");
 
+// Repository Imports
+const organizationRepository = require("../services/organizationRepository");
+
+// Validation Imports
+const LoginValidation = require("../validation_rules/users/login.validation");
+
+// Initialization of Validation
+const validateUser = new LoginValidation();
+
+// Initialize Repo
+const orgRepo = new organizationRepository();
+
 exports.createOrganization = catchAsyncError(async (req, res) => {
   try {
     const { organizationType, name, email, contactNumber, isPaid } = req.body;
@@ -30,15 +42,20 @@ exports.createOrganization = catchAsyncError(async (req, res) => {
     });
 
     // Token generation starts here
-    const token = jwt.sign({ id: newOrganization.id }, process.env.tokenKey, {
-      expiresIn: "30d",
-    });
+    const token = jwt.sign(
+      {
+        id: newOrganization._id, email: newOrganization.email
+      },
+      process.env.tokenKey,
+      {
+        expiresIn: "30d",
+      });
     // Token generation ends here
 
     res.status(201).json({
       message: "Organization created successfully",
       organization: newOrganization,
-      //   token,
+      token: token,
     });
   } catch (error) {
     console.log(error);
@@ -156,4 +173,32 @@ exports.deleteOrganizations = catchAsyncError(async (req, res) => {
       .status(400)
       .json({ message: "Something Went Wrong.Try again later!", error });
   }
+});
+
+exports.login = catchAsyncError(async (req, res) => {
+  if (Object.keys(req.body).length === 0) {
+    await res.status(400).json({
+      status: 400,
+      message: "Invalid request.",
+      errors: null,
+    });
+  }
+  // Validation starts
+  const checkValidity = await validateUser.checkRequest(req.body);
+
+  if (checkValidity.status === 400) {
+    await res.status(400).json(checkValidity);
+    return;
+  }
+
+  // send data to repo
+  const { email, password } = req.body;
+  const orgInfo = await orgRepo.login(email, password);
+
+  if (orgInfo.status === 400) {
+    await res.status(400).json(orgInfo);
+    return;
+  }
+
+  await res.status(200).json(orgInfo);
 });

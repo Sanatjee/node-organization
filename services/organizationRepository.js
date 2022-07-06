@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const organization = require("../models/organization.model");
 
 class organizationRepository {
@@ -22,6 +24,33 @@ class organizationRepository {
         isPaid: false,
       };
     }
+  }
+
+  async login(email, password) {
+    let orgInfo = await organization.findOne({ email });
+
+    if (orgInfo && (await bcrypt.compare(password.toString(), orgInfo.password))) {
+      // Create token
+      const token = jwt.sign(
+        { organization_id: orgInfo._id, email },
+        process.env.tokenKey,
+        {
+          expiresIn: "30d",
+        }
+      );
+
+      return {
+        status: 200,
+        message: "Welcome! How are you doing today?",
+        organizationInfo: orgInfo,
+        token: token,
+      };
+    }
+    return {
+      status: 400,
+      message: "Invalid Credentials",
+      errors: null,
+    };
   }
 }
 
