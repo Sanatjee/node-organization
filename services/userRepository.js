@@ -62,13 +62,26 @@ class userRepository {
   }
 
   async canAddUsers(orgId) {
-    console.log(orgId);
+
     const orgUsers = await userModel.find({ organizationId: orgId });
-    if (orgUsers.length > 5) {
+    console.log(orgUsers);
+    console.log("Length is " + orgUsers.length);
+    if (orgUsers.length >= 5) {
       return false;
     }
     return true;
   }
+
+  async findUserByEmail(email) {
+
+    return await userModel.findOne({ email });
+
+  }
+
+  // async canEdit(orgId, userId) {
+  //   const userInfo = await userModel.find({ _id: userId });
+  //   console.log(userInfo);
+  // }
 }
 
 module.exports = userRepository;

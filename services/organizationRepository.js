@@ -52,6 +52,7 @@ class organizationRepository {
       errors: null,
     };
   }
+  
 }
 
 module.exports = organizationRepository;

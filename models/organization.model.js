@@ -21,6 +21,12 @@ const OrganizationModel = mongoose.Schema({
     type: Number,
     required: true,
   },
+  totalLeavesAllowed: {
+    type: Number,
+  },
+  monthlyLeavesAllowed: {
+    type: Number,
+  },
   expiresAt: {
     type: Date,
   },
