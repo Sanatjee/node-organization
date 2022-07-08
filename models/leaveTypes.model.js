@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const leaveTypeModel = mongoose.Schema({
     title: {
-        type: "string",
+        type: String,
         required: true
     }
 });
