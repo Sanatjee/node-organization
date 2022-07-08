@@ -7,4 +7,10 @@ const leaveTypeModel = mongoose.Schema({
     }
 });
 
+leaveTypeModel.methods.toJSON = function () {
+    var obj = this.toObject();
+    delete obj.__v;
+    return obj;
+};
+
 module.exports = mongoose.model("LeaveType", leaveTypeModel)

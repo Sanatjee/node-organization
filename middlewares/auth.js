@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
                 errors: null,
             });
         }
-        console.log(decodedUser);
+
         next();
     } catch (err) {
         res.status(400).json({

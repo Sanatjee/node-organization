@@ -38,6 +38,10 @@ const OrganizationModel = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    default: "Organization",
+  },
 });
 
 OrganizationModel.methods.toJSON = function () {
