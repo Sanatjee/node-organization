@@ -38,4 +38,4 @@ leavesModel.methods.toJSON = function () {
     return obj;
 };
 
-module.exports = mongoose.model("LeaveType", leavesModel)
+module.exports = mongoose.model("LeaveType", leavesModel) 

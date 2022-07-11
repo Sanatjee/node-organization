@@ -10,4 +10,4 @@ const leavesController = require("../controllers/leaves.controller");
 
 router.post('/leaves/apply', [nullRequest, auth], leavesController.applyForLeave);
 
-module.exports = router;
+module.exports = router; 
